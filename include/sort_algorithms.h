@@ -36,7 +36,43 @@ void InsertionSort(T* first, T* last, Compare comp)
     }
 }
 
+template <typename T, typename Compare>
+T* MedianOfThree(T* a, T* b, T* c, Compare comp)
+{
+    if (comp(*a, *b))
+    {
+        if (comp(*b, *c))
+        {
+            return b;
+        }
 
+        else if (comp(*a, *c))
+        {
+            return c;
+        }
+
+        else
+        {
+            return a;
+        }
+    }
+
+    else
+    {
+        if (comp(*a, *c))
+        {
+            return a;
+        }
+        else if (comp(*b, *c))
+        {
+            return c;
+        }
+        else
+        {
+            return b;
+        }
+    }
+}
 
 
 #endif //CPP_LAB3_SORT_ALGORITHMS_H
