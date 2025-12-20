@@ -7,7 +7,7 @@
 #include <algorithm>
 
 
-class sort_algorithms
+class sort
 {
 };
 

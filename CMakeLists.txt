@@ -4,4 +4,4 @@ project(cpp_lab3)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(cpp_lab3 main.cpp
-        include/sort_algorithms.h)
+        include/sort.h)
