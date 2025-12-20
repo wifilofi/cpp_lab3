@@ -6,11 +6,6 @@
 #define CPP_LAB3_SORT_ALGORITHMS_H
 #include <algorithm>
 
-
-class sort
-{
-};
-
 template <typename T, typename Compare>
 void insertion_sort(T* first, T* last, Compare comp)
 {

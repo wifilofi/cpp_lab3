@@ -4,4 +4,7 @@ project(cpp_lab3)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(cpp_lab3 main.cpp
-        include/sort.h)
+        include/sort.h
+        benchmark.cpp
+        nanobench.h
+)
