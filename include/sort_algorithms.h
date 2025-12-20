@@ -11,68 +11,118 @@ class sort_algorithms
 {
 };
 
-template <typename T>
-inline void MoveSwap(T& a, T& b)
-{
-    T Tmp = std::move(a);
-    a = std::move(b);
-    b = std::move(Tmp);
-}
-
 template <typename T, typename Compare>
-void InsertionSort(T* first, T* last, Compare comp)
+void insertion_sort(T* first, T* last, Compare comp)
 {
-    if (first >= last) return;
-    for (T* It = first + 1; It < last; ++It)
+    for (T* i = first + 1; i < last; i++)
     {
-        T Key = std::move(*It);
-        T* J = It;
-        while (J > first && comp(Key, *(J - 1)))
+        T* k = i - 1;
+        while (k >= first && comp(*(k + 1), *k))
         {
-            *J = std::move(*(J - 1));
-            --J;
+            std::swap(*(k + 1), *k);
+            k -= 1;
         }
-        *J = std::move(Key);
     }
 }
 
 template <typename T, typename Compare>
-T* MedianOfThree(T* a, T* b, T* c, Compare comp)
+T* median_of_three(T* a, T* b, T* c, Compare comp)
 {
+    //a < b
     if (comp(*a, *b))
     {
+        //a < b < c
         if (comp(*b, *c))
         {
             return b;
         }
 
-        else if (comp(*a, *c))
-        {
-            return c;
-        }
-
-        else
-        {
-            return a;
-        }
-    }
-
-    else
-    {
+        //a < c < b
         if (comp(*a, *c))
         {
-            return a;
-        }
-        else if (comp(*b, *c))
-        {
             return c;
         }
-        else
-        {
-            return b;
-        }
+
+        //c < a < b
+        return a;
     }
+
+    //b <= a < c
+    if (comp(*a, *c))
+    {
+        return a;
+    }
+
+    //b < c < a
+    if (comp(*b, *c))
+    {
+        return c;
+    }
+
+    //c < b <=a
+    return b;
+}
+
+template <typename T, typename Compare>
+T* partition(T* first, T* last, Compare comp)
+{
+    T* mid = first + (last - first) / 2;
+    T* pivot_ptr = median_of_three(first, mid, last - 1, comp);
+
+    std::swap(*first, *pivot_ptr);
+    T pivot = std::move(*first);
+
+    T* i = first;
+    T* k = last;
+
+    while (true)
+    {
+        do
+        {
+            ++i;
+        }
+        while (i < last && comp(*i, pivot));
+
+        do
+        {
+            --k;
+        }
+        while (k > first && comp(pivot, *k));
+
+        if (i >= k) break;
+
+        std::swap(*i, *k);
+    }
+
+    std::swap(*first, *k);
+    return k;
 }
 
 
+template <typename T, typename Compare>
+void sort(T* first, T* last, Compare comp)
+{
+    const std::ptrdiff_t INSERTION_SORT_THRESHOLD = 10;
+
+    while (last - first > INSERTION_SORT_THRESHOLD)
+    {
+        T* pivot = partition(first, last, comp);
+
+        std::ptrdiff_t left_len = pivot - first;
+        std::ptrdiff_t right_len = (last - 1) - pivot;
+
+        if (left_len < right_len)
+        {
+            sort(first, pivot, comp);
+            first = pivot + 1;
+        }
+        else
+        {
+            sort(pivot + 1, last, comp);
+            last = pivot;
+        }
+    }
+
+    insertion_sort(first, last, comp);
+}
 #endif //CPP_LAB3_SORT_ALGORITHMS_H
