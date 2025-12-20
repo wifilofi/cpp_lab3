@@ -21,7 +21,7 @@ void insertion_sort(T* first, T* last, Compare comp)
 }
 
 template <typename T, typename Compare>
-T* median_of_three(T* a, T* b, T* c, Compare comp)
+T* median(T* a, T* b, T* c, Compare comp)
 {
     //a < b
     if (comp(*a, *b))
@@ -62,7 +62,7 @@ template <typename T, typename Compare>
 T* partition(T* first, T* last, Compare comp)
 {
     T* mid = first + (last - first) / 2;
-    T* pivot_ptr = median_of_three(first, mid, last - 1, comp);
+    T* pivot_ptr = median(first, mid, last - 1, comp);
 
     std::swap(*first, *pivot_ptr);
     T pivot = std::move(*first);
