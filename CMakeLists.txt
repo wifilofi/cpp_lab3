@@ -18,38 +18,32 @@ add_executable(lab3
         include/sort.h
 )
 
-# Настройки для разных компиляторов
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    add_compile_options(-Wall -Wextra -O3 -march=native)
-    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        add_compile_options(-Wno-unused-command-line-argument)
-    endif ()
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_compile_options(/W4 /O2 /arch:AVX2)
-endif ()
+# google test
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.17.0
+)
+
+add_executable(sort_tests
+sort_tests.cpp)
+
+target_link_libraries(
+        sort_tests
+        gtest
+)
+
+
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
 
 add_executable(benchmark
-        benchmark.cpp)
+        benchmark.cpp
+)
 
 target_link_libraries(benchmark PRIVATE nanobench)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-
-#[[
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/visualize.py
-        ${CMAKE_BINARY_DIR}/visualize.py
-        COPYONLY)
-
-add_custom_target(visualize
-        COMMAND python visualize.py
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        DEPENDS benchmark
-)
-]]
-
-#[[
-add_executable(visualize
-        visualize.py)
-]]
+enable_testing()

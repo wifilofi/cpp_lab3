@@ -2,8 +2,6 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-
-#include <nanobench.h>
 #include <random>
 
 #include "include/sort.h"
@@ -21,7 +19,7 @@ void show_int_sort()
     for (size_t i = 0; i < n; i++) std::cout << arr[i] << " ";
     std::cout << "\n";
 
-    sort(arr, arr + n, [](int a, int b) { return a < b; });
+    quick_sort(arr, arr + n, [](int a, int b) { return a < b; });
 
     std::cout << "After: ";
     for (size_t i = 0; i < n; i++) std::cout << arr[i] << " ";
@@ -49,7 +47,6 @@ int main()
 {
     show_int_sort();
     show_string_sort();
-    //benchmark();
 
     return 0;
 }

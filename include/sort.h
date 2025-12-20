@@ -95,9 +95,34 @@ T* partition(T* first, T* last, Compare comp)
 
 
 template <typename T, typename Compare>
-void sort(T* first, T* last, Compare comp)
+void quick_sort(T* first, T* last, Compare comp)
 {
-    const std::ptrdiff_t INSERTION_SORT_THRESHOLD = 10;
+    if (first == last || first + 1 == last)
+    {
+        return;
+    }
+
+    T* pivot = partition(first, last, comp);
+
+    std::ptrdiff_t left_len = pivot - first;
+    std::ptrdiff_t right_len = (last - 1) - pivot;
+
+    if (left_len < right_len)
+    {
+        quick_sort(first, pivot, comp);
+        quick_sort(pivot + 1, last, comp);
+    }
+    else
+    {
+        quick_sort(pivot + 1, last, comp);
+        quick_sort(first, pivot, comp);
+    }
+}
+
+template <typename T, typename Compare>
+void hybrid_sort(T* first, T* last, Compare comp)
+{
+    const std::ptrdiff_t INSERTION_SORT_THRESHOLD = 16;
 
     while (last - first > INSERTION_SORT_THRESHOLD)
     {
@@ -108,16 +133,17 @@ void sort(T* first, T* last, Compare comp)
 
         if (left_len < right_len)
         {
-            sort(first, pivot, comp);
+            hybrid_sort(first, pivot, comp);
             first = pivot + 1;
         }
         else
         {
-            sort(pivot + 1, last, comp);
+            hybrid_sort(pivot + 1, last, comp);
             last = pivot;
         }
     }
 
     insertion_sort(first, last, comp);
 }
+
 #endif //CPP_LAB3_SORT_ALGORITHMS_H
